@@ -23,15 +23,19 @@ gray_letters = set()
 
 while True:
     os.system('cls' if os.name == 'nt' else 'clear')
-    mode = int(input(
-        '''
+    try:
+        mode = int(input(
+'''
 1. add a green letter
 2. add a yellow letter
 3. add gray letters
 4. show {} candidates
 5. reset
-enter any other number to exit: '''
+6. enter any other input to exit
+choose an option: '''
         .format(len(word_list))))
+    except (ValueError, TypeError):
+        mode = 0
 
     if mode == 1:
         positionIndex = int(input("position: ")) - 1
@@ -59,8 +63,8 @@ enter any other number to exit: '''
         gray_letters = set()
         continue
     else:
-        confirm = input("are you sure you want to exit? y/[n]")
-        if confirm == 'y':
+        confirm = input("are you sure you want to exit? (y/[n]) ")
+        if confirm.lower() == 'y':
             break
         else:
             continue
