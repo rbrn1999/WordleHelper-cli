@@ -11,15 +11,15 @@ Follow the on screen descirption to filter and show candidate words after your a
 color: ```g``` is for green, ```y``` is for yellow , ```x``` is for gray
 
 ## Example Screenshots
-![](images/wordle.jpg?raw=true)
-first attemp 
-![](images/example_1.jpg)
-second attemp 
-![](images/example_2.jpg)
-third attemp 
-![](images/example_3.jpg)
-forth attemp 
-![](images/example_4.jpg)
+![](images/wordle.jpg?raw=true)  
+first attemp  
+![](images/example_1.jpg)  
+second attemp  
+![](images/example_2.jpg)  
+third attemp  
+![](images/example_3.jpg)  
+forth attemp  
+![](images/example_4.jpg)  
 
 ## TODO
 | Catagory | Description |
