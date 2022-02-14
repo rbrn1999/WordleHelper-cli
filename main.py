@@ -2,13 +2,7 @@ import os
 
 #get word list
 
-#method using nltk
-# import nltk
-# # nltk.download() # use when first run
-# word_list = nltk.corpus.words.words()
-
-#method using system words, only for Linux or macOS
-
+# use word list from Linux or macOS
 words = open("/usr/share/dict/words", "r")
 word_list = words.read().split()
 words.close()
@@ -17,98 +11,81 @@ print(len(word_list))
 #get 5 character long words
 word_list = [word for word in word_list if len(word) == 5]
 
-green_letters = {}
-yellow_letters = {}
-gray_letters = set()
+green_letters = {} # {int: char}
+yellow_letters = {} # {char: [int]}
+gray_letters = set() # {char}
+
+WORD_LEN = 5
+
+def match_green(word):
+    for pos in green_letters:
+        if word[pos] != green_letters[pos]:
+            return False
+    return True
+
+def match_yellow(word):
+    for chr in yellow_letters:
+        if chr not in word:
+            return False
+        occurs = [i for i, v in enumerate(word) if v == chr]
+        if len(set(occurs).intersection(yellow_letters[chr])):
+            return False
+    return True
+
+def match_gray(word):
+    for i, chr in enumerate(word):
+        if chr in gray_letters:
+            if i in green_letters and green_letters[i] == chr:
+                 continue
+            if chr in yellow_letters:
+                 gp = [i for i in range(WORD_LEN) if i in green_letters and green_letters[i] == chr]
+                 lp = [i for i in range(WORD_LEN) if word[i] == chr]
+                 if chr in yellow_letters and len(yellow_letters[chr]) >= len(set(lp).difference(gp)):
+                     continue
+            return False
+    return True
+ 
+
+def showWords(wordList):
+    for i, word in enumerate(word_list):
+        end = '\n' if (i+1) % 6 == 0 else ' '
+        print(word, end=end)
+    if len(word_list)+1 % 6:
+        print()
+
+showPrev = False
 
 while True:
     os.system('cls' if os.name == 'nt' else 'clear')
-    try:
-        mode = int(input(
-'''
-1. add a green letter
-2. add a yellow letter
-3. add gray letters
-4. show {} candidates
-5. reset
-6. enter any other input to exit
-choose an option: '''
-        .format(len(word_list))))
-    except (ValueError, TypeError):
-        mode = 0
+    if showPrev:
+        showWords(word_list)
+    attemp = input('Enter your word: ')
+    colors = input('Enter the colors of the letters (gyx): ')
 
-    if mode == 1:
-        positionIndex = int(input("position: ")) - 1
-        letter = input("letter: ")
-        green_letters[positionIndex] = letter
-    elif mode == 2:
-        positionIndex = int(input("position: ")) - 1
-        letter = input("letter: ")
-        yellow_letters[positionIndex] = letter
-    elif mode == 3:
-        letters = input("letters(seperate by space): ").split()
-        for letter in letters:
-            gray_letters.add(letter)
-    elif mode == 4:
-        for word in word_list:
-            print(word, end=' ')
-        input("\npress enter to continue ...")
-        continue
-    elif mode == 5:
-        words = open("/usr/share/dict/words", "r")
-        word_list = words.read().split()
-        words.close()
-        green_letters = {}
-        yellow_letters = {}
-        gray_letters = set()
-        continue
+    for i in range(WORD_LEN):
+        if colors[i] == 'g':
+            green_letters[i] = attemp[i]
+            if attemp[i] in yellow_letters and i in yellow_letters[attemp[i]]:
+                yellow_letters[attemp[i]].remove(i)
+        elif colors[i] == 'y':
+            yellow_letters.setdefault(attemp[i], []).append(i)
+        elif colors[i] == 'x':
+            gray_letters.add(attemp[i])
+
+    
+
+    word_list = list(filter(match_green, word_list))
+    word_list = list(filter(match_yellow, word_list))
+    word_list = list(filter(match_gray, word_list))
+
+    confirm = input(f'show {len(word_list)} possible answers? [y]/n: ')
+    if confirm.lower() != 'n':
+        showPrev = True
+        showWords(word_list)
     else:
-        confirm = input("are you sure you want to exit? (y/[n]) ")
-        if confirm.lower() == 'y':
-            break
-        else:
-            continue
+        showPrev = False
+    
+    confirm = input(f'continue? [y]/n: ')
 
-    #gray
-    tempList = []
-    for word in word_list:
-        valid = True
-        for c in gray_letters:
-            if c in word:
-                valid = False
-                break
-        if valid:
-            tempList.append(word)
-
-    word_list = tempList.copy()  
-
-    #green
-    tempList = []
-    for word in word_list:
-        # check each green letter
-        valid = True
-        for i in range(5):
-            if i not in green_letters:
-                continue
-            if word[i].lower() != green_letters[i].lower():
-                valid = False
-                break
-        if valid:
-            tempList.append(word)
-    word_list = tempList.copy()
-
-    #yellow
-    tempList = []
-    for word in word_list:
-        # check each yellow letter
-        valid = True
-        for i in range(5):
-            if i not in yellow_letters:
-                continue
-            if yellow_letters[i].lower() not in word or yellow_letters[i].lower() == word[i].lower():
-                valid = False
-                break
-        if valid:
-            tempList.append(word)
-    word_list = tempList.copy()
-
+    if confirm.lower() == 'n':
+        break
