@@ -22,6 +22,6 @@ forth attemp
 ![](images/example_4.jpg)  
 
 ## TODO
-| Catagory | Description |
-| --- | ----------- |
-| bug | handle duplicate letters cases better |
+| Catagory | Description | Status |
+| --- | ----------- | --- |
+| bug | handle duplicate letter cases better | ✔️ |
