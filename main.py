@@ -2,7 +2,9 @@ import os
 
 #get word list
 
-# use word list from Linux or macOS
+# default to use word list from Linux or macOS
+# if you're using aother OSs:
+# change path to "./words" or path to your custom file
 words = open("/usr/share/dict/words", "r")
 word_list = words.read().split()
 words.close()

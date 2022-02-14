@@ -1,11 +1,13 @@
 # WordleHelper
 
 ## Description
-A cli tool to assist your daily wordle game if you need help
+A cli tool to assist your daily wordle game if you need help finding possible words
 
 ## How to Run
 `python main.py`  
-follow the on screen descirption to filter and show candidate words after your attemps  
+change ```"/usr/share/dict/words"``` to ```./words``` if Linux or macOS built-in word list is not availble.  
+Follow the on screen descirption to filter and show candidate words after your attemps.  
+
 color: ```g``` is for green, ```y``` is for yellow , ```x``` is for gray
 
 ## Example Screenshots
